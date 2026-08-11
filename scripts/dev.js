@@ -26,7 +26,7 @@ async function main() {
     {
       cwd: ROOT,
       stdio: 'inherit',
-      env: { ...process.env, CLAUDE_REMOTE_SUPPRESS_CREDENTIALS: hasNgrok ? '1' : '' },
+      env: { ...process.env, HIGHWAYMAN_SUPPRESS_CREDENTIALS: hasNgrok ? '1' : '' },
     },
   )
 
@@ -71,10 +71,10 @@ async function main() {
       `  (local server: http://localhost:${PORT})`,
       '',
       '  CLI setup (macOS/Linux) — Windows PowerShell version in the README:',
-      '    curl -fsSL https://raw.githubusercontent.com/nimapdevyash/claude-remote/main/install.sh | bash',
+      '    curl -fsSL https://raw.githubusercontent.com/Theyashsawarkar/highwayman/main/install.sh | bash',
       '',
       '  Then connect it to this tunnel for just this run:',
-      `    claude-remote --server ${wsUrl}/ws`,
+      `    highwayman --server ${wsUrl}/ws`,
       '='.repeat(64),
       '',
     ].join('\n'),

@@ -105,7 +105,7 @@ async function main() {
   const lines = [
     '',
     '='.repeat(64),
-    `  claude-remote is live at: ${publicUrl}`,
+    `  highwayman is live at: ${publicUrl}`,
     `  (local: http://localhost:${PORT})`,
     '',
   ]
@@ -119,10 +119,10 @@ async function main() {
   }
   lines.push(
     '  CLI setup (macOS/Linux) — Windows PowerShell version in the README:',
-    '    curl -fsSL https://raw.githubusercontent.com/nimapdevyash/claude-remote/main/install.sh | bash',
+    '    curl -fsSL https://raw.githubusercontent.com/Theyashsawarkar/highwayman/main/install.sh | bash',
     '',
     '  Then connect it to this tunnel for just this run:',
-    `    claude-remote --server ${wsUrl}/ws`,
+    `    highwayman --server ${wsUrl}/ws`,
     '='.repeat(64),
     '',
   )

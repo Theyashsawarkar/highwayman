@@ -125,7 +125,7 @@ export function createTurnPrinter() {
 }
 
 export function printBanner({ name, root, sessionId, serverUrl, overrideSource }) {
-  printHeader('claude-remote')
+  printHeader('highwayman')
   const serverLine = overrideSource ? `${serverUrl}  ${dim(`(${overrideSource}, not saved)`)}` : serverUrl
   printKeyValue([
     ['connected as', accent(`"${name}"`)],

@@ -1,6 +1,6 @@
 # Runner CLI
 
-The runner CLI is what makes claude-remote feel like Claude Code is
+The runner CLI is what makes highwayman feel like Claude Code is
 running on whichever machine you're sitting at — even though the actual
 model calls happen on the server's machine (the one with your Claude Code
 login).
@@ -10,35 +10,35 @@ login).
 **macOS / Linux:**
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/nimapdevyash/claude-remote/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/Theyashsawarkar/highwayman/main/install.sh | bash
 ```
 
 **Windows (PowerShell):**
 
 ```powershell
-iwr https://raw.githubusercontent.com/nimapdevyash/claude-remote/main/install.ps1 -useb | iex
+iwr https://raw.githubusercontent.com/Theyashsawarkar/highwayman/main/install.ps1 -useb | iex
 ```
 
 Both scripts detect your OS, check for Node.js 18+, fetch the CLI, and put
-a `claude-remote` command on your `PATH`. Nothing is installed outside
-`~/.claude-remote` (and, if needed, `~/.local/bin`, or your User `PATH` on
+a `highwayman` command on your `PATH`. Nothing is installed outside
+`~/.highwayman` (and, if needed, `~/.local/bin`, or your User `PATH` on
 Windows) — see the scripts themselves at the repo root.
 
 Re-running either one-liner always does a **clean reinstall**: it removes
-whatever's at `~/.claude-remote/app` first, then fetches a fresh copy.
+whatever's at `~/.highwayman/app` first, then fetches a fresh copy.
 That's the answer to "how do I update" or "how do I get a clean slate" —
 just run the same command again. Your saved config, login session, and
-chat history live separately (directly under `~/.claude-remote/`, not
+chat history live separately (directly under `~/.highwayman/`, not
 `app/`) and survive a reinstall.
 
 ## First run
 
 ```bash
-claude-remote
+highwayman
 ```
 
 The first run asks three questions once, and remembers your answers in
-`~/.claude-remote/config.json`:
+`~/.highwayman/config.json`:
 
 1. **Server WebSocket URL** — `ws://<host>:4317/ws`, or `wss://...` through
    a tunnel
@@ -48,10 +48,10 @@ The first run asks three questions once, and remembers your answers in
 3. **Display name** — how it shows up in the web UI's "Run on" picker
 
 Then it signs you in (username/password — cached afterward at
-`~/.claude-remote/session`), connects, and drops you into a prompt:
+`~/.highwayman/session`), connects, and drops you into a prompt:
 
 ```
-◆ claude-remote
+◆ highwayman
   connected as  "yashs-laptop"
   server        ws://localhost:4317/ws
   root          /home/yash/projects
@@ -75,15 +75,15 @@ closes it.
 ## Commands and flags
 
 ```
-claude-remote                    Connect and open the chat prompt
-claude-remote setup               Re-run first-time setup (server, root, name)
-claude-remote --server <url>      Use this server URL for just this run
-claude-remote -s <url>            Shorthand for --server
-claude-remote --help              Show this
+highwayman                    Connect and open the chat prompt
+highwayman setup               Re-run first-time setup (server, root, name)
+highwayman --server <url>      Use this server URL for just this run
+highwayman -s <url>            Shorthand for --server
+highwayman --help              Show this
 
-claude-remote admin list                     List accounts (admin only)
-claude-remote admin add <username> [--admin] Create an account (admin only)
-claude-remote admin remove <username>        Remove an account (admin only)
+highwayman admin list                     List accounts (admin only)
+highwayman admin add <username> [--admin] Create an account (admin only)
+highwayman admin remove <username>        Remove an account (admin only)
 ```
 
 The `admin` commands are thin clients over `/api/admin/*` — the server

@@ -44,7 +44,7 @@ Web browser / runner CLI (chat mode)
         │  REST: create session, send message
         │  WS:   subscribe → live turn/tool-call/result events
         ▼
-   claude-remote server  ──spawns──▶  `claude` (this machine's login)
+   highwayman server  ──spawns──▶  `claude` (this machine's login)
         │  ▲                                │ MCP tool_use
         │  │ internal HTTP (loopback-only)   ▼
         │  └──────────────────────  mcpBridge.js (stdio MCP server)

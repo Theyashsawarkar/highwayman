@@ -8,7 +8,7 @@ import { printHeader } from './renderer.js'
 
 dotenv.config()
 
-const STATE_DIR = path.join(os.homedir(), '.claude-remote')
+const STATE_DIR = path.join(os.homedir(), '.highwayman')
 const ID_PATH = path.join(STATE_DIR, 'id')
 const SETUP_PATH = path.join(STATE_DIR, 'config.json')
 
@@ -68,7 +68,7 @@ export async function loadConfig({ serverOverride, minimal = false } = {}) {
   let serverUrl = serverOverride?.trim() || SERVER_URL?.trim() || saved.serverUrl
   if (!serverUrl) {
     printHeader('First-time setup')
-    console.log('This only happens once — saved to ~/.claude-remote/config.json\n')
+    console.log('This only happens once — saved to ~/.highwayman/config.json\n')
     serverUrl = await prompt('Server WebSocket URL [ws://localhost:4317/ws]: ')
     serverUrl = serverUrl || 'ws://localhost:4317/ws'
     changed = true
@@ -94,7 +94,7 @@ export async function loadConfig({ serverOverride, minimal = false } = {}) {
 
   if (changed) {
     saveSetup({ serverUrl, root, name })
-    console.log('Saved. Run `claude-remote setup` any time to change these.\n')
+    console.log('Saved. Run `highwayman setup` any time to change these.\n')
   }
 
   return {

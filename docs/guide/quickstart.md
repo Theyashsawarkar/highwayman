@@ -1,9 +1,9 @@
 # Quickstart
 
-claude-remote has three pieces, each its own workspace:
+highwayman has three pieces, each its own workspace:
 
 ```
-claude-remote/
+highwayman/
   server/   Express + WebSocket API — spawns `claude`, relays MCP tool calls
   client/   The web UI (Vite + React + Tailwind)
   runner/   The CLI you run on any other machine
@@ -17,8 +17,8 @@ session's files/commands end up touching.
 ## 1. Install and configure the server
 
 ```bash
-git clone https://github.com/nimapdevyash/claude-remote.git
-cd claude-remote
+git clone https://github.com/Theyashsawarkar/highwayman.git
+cd highwayman
 npm install
 cp server/.env.example server/.env
 ```
@@ -60,7 +60,7 @@ If you want Claude Code's actual file edits and shell commands to happen
 on a *different* machine, install the runner CLI there:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/nimapdevyash/claude-remote/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/Theyashsawarkar/highwayman/main/install.sh | bash
 ```
 
 See the [Runner CLI guide](/guide/runner-cli) for the Windows one-liner and

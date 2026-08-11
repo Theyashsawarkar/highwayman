@@ -34,7 +34,7 @@ curl -fsSL https://raw.githubusercontent.com/Theyashsawarkar/highwayman/main/ins
 iwr https://raw.githubusercontent.com/Theyashsawarkar/highwayman/main/install.ps1 -useb | iex
 ```
 
-Then run `claude-remote` — first run walks you through server URL,
+Then run `highwayman` — first run walks you through server URL,
 folder, name, and sign-in.
 
 ## Run the server + web UI
@@ -56,7 +56,7 @@ npm run serve:public
 ```
 
 This builds the client, starts the server, opens the tunnel, and prints
-the public URL — plus the exact `claude-remote --server wss://...` command
+the public URL — plus the exact `highwayman --server wss://...` command
 to point a runner CLI at it for that run, without overwriting its saved
 default. See [Exposing it remotely](docs/guide/remote-access.md)
 and [Auth & security](docs/guide/security.md) before you do.
@@ -70,13 +70,6 @@ highwayman/
   runner/   The CLI you run on any other machine
   docs/     Documentation site (VitePress)
 ```
-
-## A note on internal naming
-
-The repo and product are now **Highwayman**, but the CLI binary, npm
-package name, config directory (`~/.claude-remote`), and env var prefixes
-(`CLAUDE_REMOTE_*`) inside the code still say `claude-remote` — that's a
-larger refactor than a branding change, so it was left alone here.
 
 ## License
 

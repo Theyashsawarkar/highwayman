@@ -34,7 +34,7 @@ export async function runAdminCommand(httpBaseUrl, token, subcommand, args) {
     const username = args.find((a) => !a.startsWith('-'))
     const isAdmin = args.includes('--admin')
     if (!username) {
-      printError('Usage: claude-remote admin add <username> [--admin]')
+      printError('Usage: highwayman admin add <username> [--admin]')
       process.exit(1)
     }
     const password = await promptHidden(`Password for "${username}": `)
@@ -58,7 +58,7 @@ export async function runAdminCommand(httpBaseUrl, token, subcommand, args) {
   if (subcommand === 'remove') {
     const username = args[0]
     if (!username) {
-      printError('Usage: claude-remote admin remove <username>')
+      printError('Usage: highwayman admin remove <username>')
       process.exit(1)
     }
     const res = await authedFetch(httpBaseUrl, token, `/api/admin/accounts/${encodeURIComponent(username)}`, {
@@ -74,6 +74,6 @@ export async function runAdminCommand(httpBaseUrl, token, subcommand, args) {
   }
 
   printError(`Unknown admin subcommand: ${subcommand || '(none)'}`)
-  console.log('Usage: claude-remote admin <list|add|remove> ...')
+  console.log('Usage: highwayman admin <list|add|remove> ...')
   process.exit(1)
 }

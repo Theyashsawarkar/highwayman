@@ -34,9 +34,9 @@ one, by default) can manage other accounts while signed in — no direct
 server shell access required:
 
 ```bash
-claude-remote admin list                     # list accounts
-claude-remote admin add <username> [--admin]  # create one, optionally as admin
-claude-remote admin remove <username>         # remove one
+highwayman admin list                     # list accounts
+highwayman admin add <username> [--admin]  # create one, optionally as admin
+highwayman admin remove <username>         # remove one
 ```
 
 Or from the web UI: a "Manage accounts" entry appears in the sidebar for

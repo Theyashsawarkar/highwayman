@@ -29,36 +29,36 @@ function parseArgs(argv) {
 }
 
 function printHelp() {
-  printHeader('claude-remote')
+  printHeader('highwayman')
   console.log("Run Claude Code from anywhere — reasoning happens on the server's")
   console.log('login; execution happens wherever this CLI is running.\n')
 
   console.log(bold('Commands'))
   printCommandHelp([
     {
-      usage: 'claude-remote',
+      usage: 'highwayman',
       description: 'Connect and open the interactive chat prompt.',
-      example: 'claude-remote',
+      example: 'highwayman',
     },
     {
-      usage: 'claude-remote setup',
+      usage: 'highwayman setup',
       description: 'Re-run first-time setup (server URL, working folder, display name).',
-      example: 'claude-remote setup',
+      example: 'highwayman setup',
     },
     {
-      usage: 'claude-remote admin list',
+      usage: 'highwayman admin list',
       description: 'List every account on the server. Admin accounts only.',
-      example: 'claude-remote admin list',
+      example: 'highwayman admin list',
     },
     {
-      usage: 'claude-remote admin add <username> [--admin]',
+      usage: 'highwayman admin add <username> [--admin]',
       description: 'Create a new account, optionally as an admin. Admin accounts only.',
-      example: 'claude-remote admin add rupali --admin',
+      example: 'highwayman admin add rupali --admin',
     },
     {
-      usage: 'claude-remote admin remove <username>',
+      usage: 'highwayman admin remove <username>',
       description: "Remove an account. Admin accounts only; you can't remove your own.",
-      example: 'claude-remote admin remove rupali',
+      example: 'highwayman admin remove rupali',
     },
   ])
 
@@ -67,7 +67,7 @@ function printHelp() {
     {
       usage: '--server <url>, -s <url>',
       description: 'Use this server URL for just this run — never overwrites the saved one.',
-      example: 'claude-remote --server wss://abc123.ngrok-free.app/ws',
+      example: 'highwayman --server wss://abc123.ngrok-free.app/ws',
     },
     {
       usage: '--help, -h',
@@ -75,7 +75,7 @@ function printHelp() {
     },
   ])
 
-  console.log(dim('Docs: https://nimapdevyash.github.io/claude-remote/'))
+  console.log(dim('Docs: https://github.com/Theyashsawarkar/highwayman/tree/main/docs'))
 }
 
 async function main() {
@@ -88,7 +88,7 @@ async function main() {
 
   if (command === 'setup') {
     resetSetup()
-    console.log('Setup cleared — run `claude-remote` again to reconfigure.')
+    console.log('Setup cleared — run `highwayman` again to reconfigure.')
     process.exit(0)
   }
 
@@ -123,7 +123,7 @@ async function main() {
       overrideSource: config.overrideSource,
     })
   } else {
-    console.log(`claude-remote connected as "${config.name}" — root: ${config.root}`)
+    console.log(`highwayman connected as "${config.name}" — root: ${config.root}`)
     console.log(dim('Running in the background (no TTY). Ctrl+C to stop.'))
   }
 }

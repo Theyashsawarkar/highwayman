@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face {
+    font-family: 'system';
+    src: local('DejaVu Serif');
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 1200px; height: 630px;
+    background: #0b0f14;
+    font-family: 'DejaVu Sans', Arial, sans-serif;
+    overflow: hidden;
+    position: relative;
+  }
+  .grain {
+    position: absolute; inset: 0;
+    background-image: radial-gradient(circle at 15% 20%, rgba(232,163,61,0.10), transparent 40%),
+                       radial-gradient(circle at 85% 85%, rgba(94,140,166,0.10), transparent 45%);
+  }
+  .road {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 220px;
+    background: linear-gradient(180deg, transparent, rgba(255,255,255,0.03) 40%, rgba(255,255,255,0.05));
+  }
+  .road-line {
+    position: absolute; bottom: 90px; left: 0; right: 0; height: 4px;
+    display: flex; gap: 28px; padding-left: 60px;
+  }
+  .dash {
+    width: 46px; height: 100%; background: rgba(232,163,61,0.35); border-radius: 2px;
+  }
+  .content {
+    position: relative; z-index: 2;
+    padding: 90px 90px 0 90px;
+  }
+  .eyebrow {
+    color: #5e8ca6; font-size: 22px; letter-spacing: 6px; text-transform: uppercase;
+    font-weight: 700; margin-bottom: 22px;
+  }
+  h1 {
+    font-family: 'DejaVu Serif', Georgia, serif;
+    color: #f4ede1; font-size: 108px; font-weight: 700; letter-spacing: 1px;
+    line-height: 1;
+  }
+  .tagline {
+    color: #a9b6bf; font-size: 30px; margin-top: 30px; max-width: 880px; line-height: 1.4;
+  }
+  .accent { color: #e8a33d; }
+  .badge-row {
+    display: flex; gap: 16px; margin-top: 46px;
+  }
+  .badge {
+    border: 1.5px solid rgba(232,163,61,0.55); color: #e8a33d;
+    font-size: 20px; padding: 10px 20px; border-radius: 999px; font-weight: 600;
+    font-family: 'DejaVu Sans Mono', monospace;
+  }
+  .footer {
+    position: absolute; bottom: 46px; left: 90px; right: 90px;
+    display: flex; justify-content: space-between; align-items: center;
+    z-index: 2;
+  }
+  .repo {
+    color: #f4ede1; font-size: 26px; font-family: 'DejaVu Sans Mono', monospace; font-weight: 700;
+  }
+  .repo span { color: #5e8ca6; }
+  .mask {
+    position: absolute; top: 66px; right: 96px; width: 150px; height: 150px;
+    z-index: 2;
+  }
+</style>
+</head>
+<body>
+  <div class="grain"></div>
+  <div class="road"><div class="road-line">
+    <div class="dash"></div><div class="dash"></div><div class="dash"></div>
+    <div class="dash"></div><div class="dash"></div><div class="dash"></div>
+    <div class="dash"></div><div class="dash"></div><div class="dash"></div>
+    <div class="dash"></div><div class="dash"></div><div class="dash"></div>
+    <div class="dash"></div><div class="dash"></div><div class="dash"></div>
+  </div></div>
+
+  <svg class="mask" viewBox="0 0 100 100" fill="none">
+    <path d="M50 8 C30 8 16 22 16 42 C16 60 24 74 38 82 L38 88 C38 92 42 95 46 95 L54 95 C58 95 62 92 62 88 L62 82 C76 74 84 60 84 42 C84 22 70 8 50 8 Z"
+      stroke="#e8a33d" stroke-width="2.4" fill="rgba(232,163,61,0.06)"/>
+    <ellipse cx="36" cy="46" rx="7" ry="9" fill="#0b0f14" stroke="#e8a33d" stroke-width="2.4"/>
+    <ellipse cx="64" cy="46" rx="7" ry="9" fill="#0b0f14" stroke="#e8a33d" stroke-width="2.4"/>
+    <path d="M18 34 C30 20 70 20 82 34" stroke="#e8a33d" stroke-width="2.4"/>
+  </svg>
+
+  <div class="content">
+    <div class="eyebrow">open source &middot; self-hosted</div>
+    <h1>Highway<span class="accent">man</span></h1>
+    <div class="tagline">Run <b style="color:#f4ede1">Claude Code</b> from anywhere. One authenticated
+      session on your machine, reachable from your phone or any other device —
+      live, over a web UI or CLI.</div>
+    <div class="badge-row">
+      <div class="badge">Node.js</div>
+      <div class="badge">WebSockets</div>
+      <div class="badge">MCP</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="repo"><span>github.com/</span>Theyashsawarkar/highwayman</div>
+  </div>
+</body>
+</html>

@@ -1,9 +1,9 @@
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
-  title: 'claude-remote',
+  title: 'highwayman',
   description: 'Run Claude Code from anywhere — a web UI and a CLI, both backed by your own machine.',
-  base: '/claude-remote/',
+  base: '/highwayman/',
   cleanUrls: true,
   lastUpdated: true,
 
@@ -12,7 +12,7 @@ export default defineConfig({
       { text: 'Guide', link: '/guide/quickstart' },
       { text: 'Runner CLI', link: '/guide/runner-cli' },
       { text: 'Architecture', link: '/guide/architecture' },
-      { text: 'GitHub', link: 'https://github.com/nimapdevyash/claude-remote' },
+      { text: 'GitHub', link: 'https://github.com/Theyashsawarkar/highwayman' },
     ],
 
     sidebar: [
@@ -34,7 +34,7 @@ export default defineConfig({
       },
     ],
 
-    socialLinks: [{ icon: 'github', link: 'https://github.com/nimapdevyash/claude-remote' }],
+    socialLinks: [{ icon: 'github', link: 'https://github.com/Theyashsawarkar/highwayman' }],
 
     search: { provider: 'local' },
   },
