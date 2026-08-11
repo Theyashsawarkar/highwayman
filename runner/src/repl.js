@@ -1,6 +1,6 @@
 import WebSocket from 'ws'
 import { prompt } from './prompt.js'
-import { createTurnPrinter, printBanner, printError, dim, PROMPT_SYMBOL } from './renderer.js'
+import { createTurnPrinter, printBanner, printError, printSuccess, dim, PROMPT_SYMBOL } from './renderer.js'
 
 async function authedFetch(httpBaseUrl, token, urlPath, options = {}) {
   return fetch(`${httpBaseUrl}${urlPath}`, {
@@ -21,16 +21,11 @@ export async function startRepl({ serverUrl, httpBaseUrl, token, sessionId, name
   let currentTurnId = null
   let printEvent = null
   let resolveTurn = null
+  let intentionalClose = false
+  let everConnected = false
+  let retryDelay = 1000
 
-  const ws = new WebSocket(`${serverUrl}?token=${encodeURIComponent(token)}`)
-
-  await new Promise((resolve, reject) => {
-    ws.once('open', resolve)
-    ws.once('error', reject)
-  })
-  ws.send(JSON.stringify({ type: 'subscribe', sessionId }))
-
-  ws.on('message', (raw) => {
+  function handleMessage(raw) {
     let msg
     try {
       msg = JSON.parse(raw.toString())
@@ -51,12 +46,59 @@ export async function startRepl({ serverUrl, httpBaseUrl, token, sessionId, name
       resolveTurn = null
       resolve?.()
     }
-  })
+  }
 
-  ws.on('close', () => {
-    printError('\nDisconnected from server.')
-    process.exit(1)
-  })
+  // Reconnecting after a drop can't replay what was missed (the server
+  // doesn't buffer events for offline subscribers), so if a turn was still
+  // "running" when we lost the connection, the only way to unblock the
+  // prompt again is to ask whether it's actually done now.
+  async function reconcileAfterReconnect() {
+    if (!resolveTurn) return
+    try {
+      const res = await authedFetch(httpBaseUrl, token, `/api/sessions/${sessionId}`)
+      if (!res.ok) return
+      const session = await res.json()
+      if (session.status !== 'running') {
+        printError('(missed some output while disconnected — that task has since finished; check the web UI for the full transcript)')
+        currentTurnId = null
+        const resolve = resolveTurn
+        resolveTurn = null
+        resolve?.()
+      }
+    } catch {
+      // Server still unreachable — next reconnect attempt will retry this too.
+    }
+  }
+
+  function connect() {
+    return new Promise((resolve, reject) => {
+      const ws = new WebSocket(`${serverUrl}?token=${encodeURIComponent(token)}`)
+
+      ws.once('open', () => {
+        retryDelay = 1000
+        ws.send(JSON.stringify({ type: 'subscribe', sessionId }))
+        if (everConnected) {
+          printSuccess('Reconnected.')
+          reconcileAfterReconnect()
+        }
+        everConnected = true
+        resolve(ws)
+      })
+      ws.once('error', reject)
+      ws.on('message', handleMessage)
+
+      ws.on('close', () => {
+        if (intentionalClose) return
+        printError('\nConnection lost — reconnecting…')
+        setTimeout(() => {
+          connect().catch(() => {})
+        }, retryDelay)
+        retryDelay = Math.min(retryDelay * 1.6, 15000)
+      })
+    })
+  }
+
+  await connect()
 
   printBanner({ name, root, sessionId, serverUrl, overrideSource })
 
@@ -66,10 +108,16 @@ export async function startRepl({ serverUrl, httpBaseUrl, token, sessionId, name
     if (!text) continue
     if (text === 'exit' || text === 'quit') break
 
-    const res = await authedFetch(httpBaseUrl, token, `/api/sessions/${sessionId}/messages`, {
-      method: 'POST',
-      body: JSON.stringify({ prompt: text }),
-    })
+    let res
+    try {
+      res = await authedFetch(httpBaseUrl, token, `/api/sessions/${sessionId}/messages`, {
+        method: 'POST',
+        body: JSON.stringify({ prompt: text }),
+      })
+    } catch {
+      printError('Could not reach the server — check your connection and try again.')
+      continue
+    }
     if (!res.ok) {
       const body = await res.json().catch(() => ({}))
       printError(body.error || 'Failed to send message')
@@ -81,7 +129,7 @@ export async function startRepl({ serverUrl, httpBaseUrl, token, sessionId, name
     })
   }
 
-  ws.close()
+  intentionalClose = true
   console.log(dim('\nBye.'))
   process.exit(0)
 }
