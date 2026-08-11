@@ -1,6 +1,6 @@
 import WebSocket from 'ws'
 import { prompt } from './prompt.js'
-import { createTurnPrinter, printBanner, printError, printSuccess, dim, PROMPT_SYMBOL } from './renderer.js'
+import { createTurnPrinter, createSpinner, printBanner, printError, printSuccess, dim, PROMPT_SYMBOL } from './renderer.js'
 
 async function authedFetch(httpBaseUrl, token, urlPath, options = {}) {
   return fetch(`${httpBaseUrl}${urlPath}`, {
@@ -24,6 +24,7 @@ export async function startRepl({ serverUrl, httpBaseUrl, token, sessionId, name
   let intentionalClose = false
   let everConnected = false
   let retryDelay = 1000
+  const spinner = createSpinner()
 
   function handleMessage(raw) {
     let msg
@@ -36,10 +37,12 @@ export async function startRepl({ serverUrl, httpBaseUrl, token, sessionId, name
 
     if (msg.type === 'turn_started') {
       currentTurnId = msg.turnId
-      printEvent = createTurnPrinter()
+      printEvent = createTurnPrinter(spinner)
+      spinner.start()
     } else if (msg.type === 'claude_event' && msg.turnId === currentTurnId) {
       printEvent?.(msg.event)
     } else if (msg.type === 'turn_finished' && msg.turnId === currentTurnId) {
+      spinner.stop()
       if (msg.status === 'failed' && msg.stderr) printError(msg.stderr)
       currentTurnId = null
       const resolve = resolveTurn
@@ -59,6 +62,7 @@ export async function startRepl({ serverUrl, httpBaseUrl, token, sessionId, name
       if (!res.ok) return
       const session = await res.json()
       if (session.status !== 'running') {
+        spinner.stop()
         printError('(missed some output while disconnected — that task has since finished; check the web UI for the full transcript)')
         currentTurnId = null
         const resolve = resolveTurn
@@ -88,6 +92,7 @@ export async function startRepl({ serverUrl, httpBaseUrl, token, sessionId, name
       ws.on('message', handleMessage)
 
       ws.on('close', () => {
+        spinner.stop()
         if (intentionalClose) return
         printError('\nConnection lost — reconnecting…')
         setTimeout(() => {
