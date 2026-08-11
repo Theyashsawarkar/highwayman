@@ -1,6 +1,6 @@
 import WebSocket from 'ws'
 import { prompt } from './prompt.js'
-import { createTurnPrinter, printBanner, printError, dim, PROMPT_SYMBOL } from './renderer.js'
+import { createTurnPrinter, createSpinner, printBanner, printError, dim, PROMPT_SYMBOL } from './renderer.js'
 
 async function authedFetch(httpBaseUrl, token, urlPath, options = {}) {
   return fetch(`${httpBaseUrl}${urlPath}`, {
@@ -21,6 +21,7 @@ export async function startRepl({ serverUrl, httpBaseUrl, token, sessionId, name
   let currentTurnId = null
   let printEvent = null
   let resolveTurn = null
+  const spinner = createSpinner()
 
   const ws = new WebSocket(`${serverUrl}?token=${encodeURIComponent(token)}`)
 
@@ -41,10 +42,12 @@ export async function startRepl({ serverUrl, httpBaseUrl, token, sessionId, name
 
     if (msg.type === 'turn_started') {
       currentTurnId = msg.turnId
-      printEvent = createTurnPrinter()
+      printEvent = createTurnPrinter(spinner)
+      spinner.start()
     } else if (msg.type === 'claude_event' && msg.turnId === currentTurnId) {
       printEvent?.(msg.event)
     } else if (msg.type === 'turn_finished' && msg.turnId === currentTurnId) {
+      spinner.stop()
       if (msg.status === 'failed' && msg.stderr) printError(msg.stderr)
       currentTurnId = null
       const resolve = resolveTurn
@@ -54,6 +57,7 @@ export async function startRepl({ serverUrl, httpBaseUrl, token, sessionId, name
   })
 
   ws.on('close', () => {
+    spinner.stop()
     printError('\nDisconnected from server.')
     process.exit(1)
   })
