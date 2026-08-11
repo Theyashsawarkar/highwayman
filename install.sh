@@ -8,8 +8,8 @@
 # anything outside ~/.claude-remote and (if needed) ~/.local/bin.
 set -euo pipefail
 
-REPO_URL="${CLAUDE_REMOTE_REPO_URL:-https://github.com/nimapdevyash/claude-remote.git}"
-ARCHIVE_URL="${CLAUDE_REMOTE_ARCHIVE_URL:-https://github.com/nimapdevyash/claude-remote/archive/refs/heads/main.tar.gz}"
+REPO_URL="${CLAUDE_REMOTE_REPO_URL:-https://github.com/Theyashsawarkar/highwayman.git}"
+ARCHIVE_URL="${CLAUDE_REMOTE_ARCHIVE_URL:-https://github.com/Theyashsawarkar/highwayman/archive/refs/heads/main.tar.gz}"
 INSTALL_DIR="${CLAUDE_REMOTE_INSTALL_DIR:-$HOME/.claude-remote}"
 APP_DIR="$INSTALL_DIR/app"
 BIN_NAME="claude-remote"

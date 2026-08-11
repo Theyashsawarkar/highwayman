@@ -8,8 +8,8 @@
 
 $ErrorActionPreference = "Stop"
 
-$RepoUrl = "https://github.com/nimapdevyash/claude-remote.git"
-$ArchiveUrl = "https://github.com/nimapdevyash/claude-remote/archive/refs/heads/main.zip"
+$RepoUrl = "https://github.com/Theyashsawarkar/highwayman.git"
+$ArchiveUrl = "https://github.com/Theyashsawarkar/highwayman/archive/refs/heads/main.zip"
 $InstallDir = Join-Path $env:USERPROFILE ".claude-remote"
 $AppDir = Join-Path $InstallDir "app"
 $BinDir = Join-Path $env:USERPROFILE ".local\bin"

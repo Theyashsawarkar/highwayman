@@ -1,7 +1,7 @@
 # Highwayman
 
 *Formerly `claude-remote`. Like the outlaws of old who worked the open
-road, this one operates remotely — reaching a rich, powerful machine from
+road, this one operates remotely — reaching a powerful machine from
 wherever you happen to be, phone included.*
 
 Run Claude Code from anywhere, two ways:
@@ -18,29 +18,29 @@ Run Claude Code from anywhere, two ways:
    running right there.
 
 **📖 Full documentation:** see the [`docs/`](docs) folder in this repo
-(a VitePress site — run `npm run docs:dev` to browse it locally). There's
-no public docs site for this private repo.
+(a VitePress site — run `npm run docs:dev` to browse it locally).
 
 ## Install the runner CLI
 
-This repo is **private**, so the old `curl | bash` one-liner (which
-fetches from a public raw GitHub URL) won't work here. Clone over SSH
-instead:
+**macOS / Linux:**
 
 ```bash
-git clone git@github.com:Theyashsawarkar/highwayman.git
-cd highwayman/runner
-npm install --omit=dev
-node src/index.js
+curl -fsSL https://raw.githubusercontent.com/Theyashsawarkar/highwayman/main/install.sh | bash
 ```
 
-(The installer scripts at the repo root still refer to the tool
-internally as `claude-remote` — see the note on internal naming below.)
+**Windows (PowerShell):**
+
+```powershell
+iwr https://raw.githubusercontent.com/Theyashsawarkar/highwayman/main/install.ps1 -useb | iex
+```
+
+Then run `claude-remote` — first run walks you through server URL,
+folder, name, and sign-in.
 
 ## Run the server + web UI
 
 ```bash
-git clone git@github.com:Theyashsawarkar/highwayman.git
+git clone https://github.com/Theyashsawarkar/highwayman.git
 cd highwayman
 npm install
 cp server/.env.example server/.env
@@ -75,10 +75,8 @@ highwayman/
 
 The repo and product are now **Highwayman**, but the CLI binary, npm
 package name, config directory (`~/.claude-remote`), and env var prefixes
-(`CLAUDE_REMOTE_*`) inside the code still say `claude-remote` — renaming
-those is a real refactor (binary name, install scripts, published config
-paths) rather than a branding change, so it was left alone here. Ask for
-it explicitly if you want the full rename done too.
+(`CLAUDE_REMOTE_*`) inside the code still say `claude-remote` — that's a
+larger refactor than a branding change, so it was left alone here.
 
 ## License
 
