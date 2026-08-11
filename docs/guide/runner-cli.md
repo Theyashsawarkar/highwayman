@@ -96,6 +96,41 @@ and get a fresh random URL each time — see
 [Exposing it remotely](/guide/remote-access) — since it overrides the
 saved server URL for a single run without touching what's saved.
 
+## Attaching files
+
+```
+❯ @fileupload ~/Pictures/screenshot.png notes/bug-report.txt
+  attached Pictures/screenshot.png
+  attached notes/bug-report.txt
+❯ take a look at these and tell me what's going wrong
+```
+
+Give `@fileupload` one or more paths — absolute or relative to `root` —
+and it checks each one exists and stays inside `root`, then holds onto it.
+Whatever you type next gets an "Attached file(s)" block appended listing
+every path you attached, and the list clears once that message actually
+sends.
+
+Bare `@fileupload` (no paths on the line) drops into a one-path-per-line
+prompt instead, so attaching a handful of files doesn't mean one very long
+command:
+
+```
+❯ @fileupload
+  Enter a file path, one per line. Blank line to finish.
+  path> ~/Pictures/screenshot.png
+  attached Pictures/screenshot.png
+  path>
+❯
+```
+
+Nothing is actually transferred over the network here — the runner CLI
+already runs on the exact machine Claude's `remote_*` tools read from, so
+a valid path is already exactly where it needs to be. (Compare this to the
+web UI's drag-and-drop, which genuinely uploads bytes because the browser
+and the target filesystem are different machines — see
+[Web UI](/guide/web-ui).)
+
 ## What's actually happening
 
 Behind that prompt, the runner is doing two things at once:
