@@ -1,6 +1,7 @@
 import WebSocket from 'ws'
 import { prompt } from './prompt.js'
 import { createTurnPrinter, createSpinner, printBanner, printError, printSuccess, dim, PROMPT_SYMBOL } from './renderer.js'
+import { resolveAttachment, formatAttachmentBlock } from './attachments.js'
 
 async function authedFetch(httpBaseUrl, token, urlPath, options = {}) {
   return fetch(`${httpBaseUrl}${urlPath}`, {
@@ -25,6 +26,38 @@ export async function startRepl({ serverUrl, httpBaseUrl, token, sessionId, name
   let everConnected = false
   let retryDelay = 1000
   const spinner = createSpinner()
+  const pendingAttachments = []
+
+  // '@fileupload' with paths inline attaches each right away; bare
+  // '@fileupload' drops into a one-path-per-line loop so attaching many
+  // files doesn't mean one very long command line. Nothing is sent to the
+  // server here — attachments just ride along on the next real message.
+  async function handleFileUpload(commandLine) {
+    const args = commandLine.split(/\s+/).slice(1)
+
+    function attach(raw) {
+      try {
+        const att = resolveAttachment(root, raw)
+        pendingAttachments.push(att)
+        printSuccess(`  attached ${att.relPath}`)
+      } catch (err) {
+        printError(`  ${raw}: ${err.message}`)
+      }
+    }
+
+    if (args.length > 0) {
+      args.forEach(attach)
+      return
+    }
+
+    console.log(dim('  Enter a file path, one per line. Blank line to finish.'))
+    for (;;) {
+      const line = await prompt('  path> ')
+      const raw = line.trim()
+      if (!raw) break
+      attach(raw)
+    }
+  }
 
   function handleMessage(raw) {
     let msg
@@ -106,18 +139,25 @@ export async function startRepl({ serverUrl, httpBaseUrl, token, sessionId, name
   await connect()
 
   printBanner({ name, root, sessionId, serverUrl, overrideSource })
+  console.log(dim('Type "@fileupload <path> [path...]" (or bare, for a multi-file prompt) to attach files from this machine.\n'))
 
   for (;;) {
     const line = await prompt(PROMPT_SYMBOL)
     const text = line.trim()
     if (!text) continue
     if (text === 'exit' || text === 'quit') break
+    if (text === '@fileupload' || text.startsWith('@fileupload ')) {
+      await handleFileUpload(text)
+      continue
+    }
+
+    const outgoingPrompt = text + formatAttachmentBlock(pendingAttachments)
 
     let res
     try {
       res = await authedFetch(httpBaseUrl, token, `/api/sessions/${sessionId}/messages`, {
         method: 'POST',
-        body: JSON.stringify({ prompt: text }),
+        body: JSON.stringify({ prompt: outgoingPrompt }),
       })
     } catch {
       printError('Could not reach the server — check your connection and try again.')
@@ -128,6 +168,7 @@ export async function startRepl({ serverUrl, httpBaseUrl, token, sessionId, name
       printError(body.error || 'Failed to send message')
       continue
     }
+    pendingAttachments.length = 0
 
     await new Promise((resolve) => {
       resolveTurn = resolve
