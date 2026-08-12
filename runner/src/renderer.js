@@ -181,7 +181,7 @@ export function createTurnPrinter(spinner) {
 
 export function printBanner({ name, root, sessionId, serverUrl, overrideSource }) {
   printHeader('highwayman')
-  const serverLine = overrideSource ? `${serverUrl}  ${dim(`(${overrideSource}, not saved)`)}` : serverUrl
+  const serverLine = overrideSource ? `${serverUrl}  ${dim(`(via ${overrideSource})`)}` : serverUrl
   printKeyValue([
     ['connected as', accent(`"${name}"`)],
     ['server', serverLine],
